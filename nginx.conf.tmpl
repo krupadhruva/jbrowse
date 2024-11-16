@@ -1,0 +1,27 @@
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  ${APP_NAME};
+
+    # load default start page with iframes
+    location / {
+        root            /app;
+    }
+
+    # Dynamically load all available data
+    location /wsgi {
+        root            ${NGINX_ROOT};
+        include         uwsgi_params;
+        uwsgi_pass      unix:/var/local/jbrowse2.sock;
+    }
+
+    # Offload jbrowse2 requests
+    location /jbrowse {
+        root            ${NGINX_ROOT};
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   ${NGINX_ROOT};
+    }
+}

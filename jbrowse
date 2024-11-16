@@ -1,0 +1,97 @@
+#!/usr/bin/env python
+import argparse
+import os
+import shutil
+import subprocess
+import sys
+
+
+class MissingDependencyException(Exception):
+    def __str__(self):
+        return f"requirement error: {super().__str__()}"
+
+
+def check_requirements():
+    if shutil.which("docker") is None:
+        raise MissingDependencyException("docker is not available")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+
+    subparsers = parser.add_subparsers(dest="subparser_name")
+    exec_parser = subparsers.add_parser("exec")
+    start_parser = subparsers.add_parser("start")
+    stop_parser = subparsers.add_parser("stop")
+
+    start_parser.add_argument(
+        "-u",
+        "--docker-username",
+        default=os.getenv("DOCKER_HUB_USERNAME", "krupadhruva"),
+    )
+    start_parser.add_argument("-d", "--data", type=str)
+
+    exec_parser.add_argument(
+        "-w",
+        "--workdir",
+        type=str,
+        default="/user_data",
+        help="working directory in container",
+    )
+    exec_parser.add_argument(
+        "-c",
+        "--command",
+        nargs=argparse.REMAINDER,
+        type=str,
+        required=True,
+        help="command to run in container",
+    )
+
+    args = parser.parse_args()
+
+    if args.subparser_name == "start":
+        args.docker_image = f"docker.io/{args.docker_username}/jbrowse"
+        docker(args, "start")
+    elif args.subparser_name == "stop":
+        docker(args, "stop")
+    elif args.subparser_name == "exec":
+        docker(args, "exec")
+
+    return 0
+
+
+def docker(args, cmd):
+    if cmd == "start":
+        cmd = ["docker", "run", "-d", "--rm", "-it", "-p", "8080:80", "--name=jbrowse"]
+        if args.data:
+            cmd.extend(["-v", f"{os.path.abspath(args.data)}:/user_data"])
+
+        cmd.append(args.docker_image)
+
+        subprocess.run(cmd, stdout=subprocess.DEVNULL)
+        print("Started JBrowse2, open http://localhost:8080/")
+    elif cmd == "stop":
+        subprocess.run(["docker", "stop", "jbrowse"], stdout=subprocess.DEVNULL)
+    elif cmd == "exec":
+        subprocess.run(
+            [
+                "docker",
+                "exec",
+                "-it",
+                "-u",
+                "jb2",
+                f"--workdir={args.workdir}",
+                "jbrowse",
+            ]
+            + args.command
+        )
+
+
+if __name__ == "__main__":
+    try:
+        check_requirements()
+    except MissingDependencyException as ex:
+        print(f"{ex}, exiting!", file=sys.stderr)
+        sys.exit(-1)
+
+    sys.exit(main())
