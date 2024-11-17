@@ -1,14 +1,18 @@
 FROM nginx
 ARG APP_NAME
 
-# Install node since jbrowse2 is in Java script or Type script
-RUN apt-get update
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-RUN (. ~/.bashrc; nvm install node)
-RUN apt-get install -y samtools tabix
+ENV PATH=/root/.bun/bin:${PATH}
 
-# Install jbrowse CLI
-RUN (. ~/.bashrc; npm install -g @jbrowse/cli)
+RUN apt-get update
+
+# Install node compatible bun
+RUN apt-get install -y curl unzip
+RUN (curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr/local bash)
+RUN ln -s /usr/local/bin/bun /usr/local/bin/node
+
+# Install jbrowse CLI and required packages
+RUN apt-get install -y samtools tabix
+RUN (. ~/.bashrc; bun install -g @jbrowse/cli)
 RUN (. ~/.bashrc; jbrowse --version)
 
 # Install the actual jbrowse2 web app under well known nginx default location
