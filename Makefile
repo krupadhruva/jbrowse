@@ -7,6 +7,11 @@ DOCKER_IMAGE_ID=$(shell docker image ls -q -f reference=${IMAGE_NAME})
 DOCKER_PROCESS_ID=$(shell docker ps -q -f name=${APP_NAME})
 DOCKER_CONTAINER_ID=$(shell docker container ls -a -q -f name=${APP_NAME})
 
+# Run docker in foreground when debugging
+ifeq ($(DEBUG),)
+	DOCKER_OPTS="-d"
+endif
+
 all:
 	@echo Run specific commands: build/push/run
 
@@ -18,8 +23,8 @@ push: build
 
 run:
 	@if [ -n "${DOCKER_CONTAINER_ID}" ]; then docker container rm ${DOCKER_CONTAINER_ID}; fi
-	@docker run --name ${APP_NAME} --rm -p 8080:80 ${DOCKER_IMAGE}:${DOCKER_TAG}
-	@echo "Open http://localhost:8080/${APP_NAME}/"
+	@docker run --name ${APP_NAME} ${DOCKER_OPTS} --rm -p 8080:80 ${DOCKER_IMAGE}:${DOCKER_TAG}
+	@echo "Open http://localhost:8080/"
 
 stop:
 	@if [ -n "${DOCKER_PROCESS_ID}" ]; then docker stop ${DOCKER_PROCESS_ID}; fi
