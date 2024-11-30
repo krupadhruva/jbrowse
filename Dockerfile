@@ -5,6 +5,9 @@ ENV PATH=/root/.bun/bin:${PATH}
 
 RUN apt-get update
 
+# Install Python for all scripting
+RUN apt-get install -y python3
+
 # Install node compatible bun
 RUN apt-get install -y curl unzip
 RUN (curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr/local bash)
