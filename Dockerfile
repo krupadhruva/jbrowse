@@ -19,3 +19,5 @@ COPY nginx.conf /etc/nginx/conf.d/${APP_NAME}.conf
 # Copy and configure uwsgi app
 COPY ./app /app
 RUN if [ -f /app/requirements.txt ]; then pip install --no-cache-dir --upgrade -r /app/requirements.txt; fi
+
+RUN useradd jb2
