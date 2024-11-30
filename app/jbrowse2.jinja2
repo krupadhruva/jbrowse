@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JBrowse2</title>
+</head>
+
+<body>
+
+{% if user_data %}
+<h1>User data</h1>
+<ul>
+    {% for data in user_data %}
+        <li>
+            <a href={{ base_uri }}/?config={{ data.path }}/config.json>{{ data.name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if test_data %}
+<h1>Test data</h1>
+<ul>
+    {% for data in test_data %}
+        <li>
+            <a href={{ base_uri }}/?config={{ data.path }}/config.json>{{ data.name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+</body>
+</html>
