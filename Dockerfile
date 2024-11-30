@@ -1,21 +1,13 @@
-FROM nginx
+FROM tiangolo/uwsgi-nginx:python3.12
+
 ARG APP_NAME
-
-ENV PATH=/root/.bun/bin:${PATH}
-
-RUN apt-get update
-
-# Install Python for all scripting
-RUN apt-get install -y python3
-
-# Install node compatible bun
-RUN apt-get install -y curl unzip
-RUN (curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr/local bash)
-RUN ln -s /usr/local/bin/bun /usr/local/bin/node
+ENV PATH=/root/.node/bin:${PATH}
 
 # Install jbrowse CLI and required packages
-RUN apt-get install -y samtools tabix
-RUN (. ~/.bashrc; bun install -g @jbrowse/cli)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt-get update
+RUN apt-get install -y nodejs samtools tabix
+RUN npm install -g @jbrowse/cli
 RUN (. ~/.bashrc; jbrowse --version)
 
 # Install the actual jbrowse2 web app under well known nginx default location
@@ -23,3 +15,7 @@ RUN (. ~/.bashrc; mkdir -p /usr/share/nginx/html; cd /usr/share/nginx/html; jbro
 
 # Install custom nginx.conf
 COPY nginx.conf /etc/nginx/conf.d/${APP_NAME}.conf
+
+# Copy and configure uwsgi app
+COPY ./app /app
+RUN if [ -f /app/requirements.txt ]; then pip install --no-cache-dir --upgrade -r /app/requirements.txt; fi

@@ -18,7 +18,7 @@ push: build
 
 run:
 	@if [ -n "${DOCKER_CONTAINER_ID}" ]; then docker container rm ${DOCKER_CONTAINER_ID}; fi
-	@docker run --name ${APP_NAME} --rm -p 8080:80 -d ${DOCKER_IMAGE}:${DOCKER_TAG}
+	@docker run --name ${APP_NAME} --rm -p 8080:80 ${DOCKER_IMAGE}:${DOCKER_TAG}
 	@echo "Open http://localhost:8080/${APP_NAME}/"
 
 stop:
