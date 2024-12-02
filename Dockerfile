@@ -17,9 +17,12 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get update
 
 # Install node, jbrowse CLI and required packages
-RUN apt-get install -y nodejs samtools tabix htslib
+RUN apt-get install -y nodejs samtools tabix
 RUN npm install -g @jbrowse/cli
 RUN jbrowse --version
+
+# Create local directory to support ephemeral bootstrapping
+RUN mkdir -p /user_data
 
 # Install the actual jbrowse2 web app under well known nginx default location
 RUN (mkdir -p ${NGINX_ROOT}; cd ${NGINX_ROOT}; jbrowse create ${APP_NAME} && ln -s /user_data ${APP_NAME}/user_data)
@@ -31,3 +34,10 @@ RUN envsubst < /tmp/nginx.conf.tmpl > /etc/nginx/conf.d/${APP_NAME}.conf
 # Copy and configure uwsgi app
 COPY ./app /app
 RUN if [ -f /app/requirements.txt ]; then pip install --no-cache-dir --upgrade -r /app/requirements.txt; fi
+
+# Bootstrap custom Banna samples instead of random test samples
+COPY data /tmp/genome_data
+COPY scripts/bootstrap_samples.sh /app/bootstrap_samples.sh
+RUN rm -fr ${NGINX_ROOT}/${APP_NAME}/test_data/*
+RUN /app/bootstrap_samples.sh /tmp/genome_data ${NGINX_ROOT}/${APP_NAME}/test_data
+RUN rm -fr /tmp/genome_data

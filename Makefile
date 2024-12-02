@@ -51,7 +51,7 @@ debug:
 	@echo DOCKER_IMAGE_ID=${DOCKER_IMAGE_ID}, DOCKER_PROCESS_ID=${DOCKER_PROCESS_ID}, DOCKER_CONTAINER_ID=${DOCKER_CONTAINER_ID}
 
 shell:
-	@if [ -n "${DOCKER_PROCESS_ID}" ]; then docker exec -w /usr/share/nginx/html/${APP_NAME} -it ${DOCKER_PROCESS_ID} bash; fi
+	@if [ -n "${DOCKER_PROCESS_ID}" ]; then docker exec -w /app -u jb2 -it ${DOCKER_PROCESS_ID} bash; fi
 
 clean: stop
 	@if [ -n "${DOCKER_CONTAINER_ID}" ]; then docker container rm ${DOCKER_CONTAINER_ID}; fi
