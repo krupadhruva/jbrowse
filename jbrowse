@@ -64,7 +64,14 @@ def docker(args, cmd):
     if cmd == "start":
         cmd = ["docker", "run", "-d", "--rm", "-it", "-p", "8080:80", "--name=jbrowse"]
         if args.data:
-            cmd.extend(["-v", f"{os.path.abspath(args.data)}:/user_data"])
+            cmd.extend(
+                [
+                    "-v",
+                    f"{os.path.abspath(args.data)}:/user_data",
+                    "--env",
+                    "PERSISTENT_USER_DATA=true",
+                ]
+            )
 
         cmd.append(args.docker_image)
 

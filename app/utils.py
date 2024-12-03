@@ -12,6 +12,9 @@ from settings import APP_ROOT, TEST_DATA, USER_DATA
 def render_template(base_uri) -> str:
     context = get_all_data()
     context["base_uri"] = base_uri
+    context["storage"] = (
+        "Persistent" if "PERSISTENT_USER_DATA" in os.environ else "Ephemeral"
+    )
 
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(os.getcwd()),
