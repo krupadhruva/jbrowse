@@ -8,8 +8,15 @@ server {
         root            /app;
     }
 
-    # Dynamically load all available data
-    location /wsgi {
+    # Dynamically load/process all available data
+    location ~ ^/(upload|wsgi)/ {
+        root            ${NGINX_ROOT};
+        include         uwsgi_params;
+        uwsgi_pass      unix:/var/local/jbrowse2.sock;
+    }
+
+    # Allow uploading genome data for viewing
+    location /upload {
         root            ${NGINX_ROOT};
         include         uwsgi_params;
         uwsgi_pass      unix:/var/local/jbrowse2.sock;

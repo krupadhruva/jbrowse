@@ -21,8 +21,8 @@ RUN apt-get install -y nodejs samtools tabix
 RUN npm install -g @jbrowse/cli
 RUN jbrowse --version
 
-# Create local directory to support ephemeral bootstrapping
-RUN mkdir -p /user_data
+# Create local directory to support ephemeral bootstrapping with access to wsgi
+RUN (mkdir -p /user_data && chown jb2 /user_data)
 
 # Install the actual jbrowse2 web app under well known nginx default location
 RUN (mkdir -p ${NGINX_ROOT}; cd ${NGINX_ROOT}; jbrowse create ${APP_NAME} && ln -s /user_data ${APP_NAME}/user_data)

@@ -1,5 +1,8 @@
 import os
 import re
+import subprocess
+import tempfile
+import zipfile
 from typing import Any, AnyStr, Dict, List
 
 import jinja2
@@ -35,3 +38,17 @@ def get_all_data() -> Dict[str, Any]:
         "test_data": get_paths(os.path.join(APP_ROOT, TEST_DATA)),
         "user_data": get_paths(os.path.join(APP_ROOT, USER_DATA)),
     }
+
+
+def process_zip(filepath: str):
+    with tempfile.TemporaryDirectory() as tmpdir:
+        with zipfile.ZipFile(filepath) as zfh:
+            zfh.extractall(tmpdir)
+
+        output = "/user_data/samples"
+        os.makedirs(output, exist_ok=True)
+        subprocess.run(
+            ["/app/bootstrap_samples.sh", tmpdir, output],
+            cwd=tmpdir,
+            stdout=subprocess.DEVNULL,
+        )
