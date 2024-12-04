@@ -78,6 +78,7 @@ def upload_file():
             filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
             file.save(filepath)
             process_zip(filepath)
+            os.unlink(filepath)
 
             return redirect("/")
 
