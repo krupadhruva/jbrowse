@@ -8,15 +8,43 @@
 2. Docker
 3. curl
 
-#### Orbstack for running and managing Linux containers on your computer
+On MacOS, instructions use `brew` for installing dependencies/requirements. If you are not using `homebrew`, please follow instructions at https://brew.sh to install `homebrew`. Verify installation by running the following command (version may differ but should not error out).
 
-* Go to https://orbstack.dev/ and follow instructions to download and install on your computer (desktop/laptop)
+```$ brew --version
+$ brew --version
+Homebrew 4.4.9
+```
 
-  * MacOS specific: Install `docker` CLI from `homebrew` by running `brew install docker`
+#### Docker
+
+Orbstack is a good alternative to Docker dekstop for running and managing Linux containers on your computer
+
+* MacOS specific
+
+  * Install Orbstack from `homebrew` by running `brew install --cask orbstack` OR go to https://orbstack.dev/ and follow instructions to download and install on your computer (desktop/laptop)
+
+  * Start Orbstack app from Launchpad by cliking the icon
+
+  * To test installation and docker command line tools bundled in Orbstack, open your system terminal and in the shell, run the following command. The output may vary but should not error out.
+
+    ```
+    $ docker --version
+    Docker version 27.3.1, build ce12230
+    
+    $ docker ps
+    CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+    ```
+
+  * If you see an error something like the following, docker command line tools are not setup correctly (not available under PATH for shell to find the docker binary). Try Installing `docker` CLI from `homebrew` by running `brew install docker` only.
+
+    ```
+    $ docker --version
+    -bash: docker: command not found
+    ```
+
+* If you reach here without any errors, you are ready to run `JBrowse2` bundled in a container
 
 * Install `curl` (MacOS bundles it, no installation necessary)
-
-* Open your system terminal (command shell) and type `docker --version`. If you do not see any errors, you are ready to run `jbrowse2` bundled in a container
 
 * Python 3 should be part of MacOS and common Linux distributions. If missing, install it using the default package manager
 
@@ -27,6 +55,7 @@
   $ curl -sLO https://raw.githubusercontent.com/krupadhruva/jbrowse/refs/heads/master/jbrowse
   $ chmod +x jbrowse
   $ sudo mv -i jbrowse /usr/local/bin/.
+  $ cd ~
   ```
 
 
