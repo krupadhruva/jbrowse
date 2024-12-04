@@ -1,14 +1,20 @@
+import json
 import os
+import subprocess
+import tempfile
+from urllib import request as urllib_request
 
+import jinja2
 from flask import Flask, flash, redirect, request
-from settings import APP_NAME
+from settings import APP_NAME, USER_DATA
 from utils import process_zip, render_template
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config["SERVER_NAME"] = "localhost:8080"
 app.config["SECRET_KEY"] = APP_NAME
-app.config["UPLOAD_FOLDER"] = "/user_data/uploads/"
+app.config["USER_DATA"] = os.path.join("/", USER_DATA)
+app.config["UPLOAD_FOLDER"] = os.path.join(app.config["USER_DATA"], "uploads")
 if not os.path.exists(app.config["UPLOAD_FOLDER"]):
     os.makedirs(app.config["UPLOAD_FOLDER"])
 
@@ -77,6 +83,30 @@ def upload_file():
             return redirect(f"{request.scheme}://{server_name}/")
 
     return upload_html
+
+
+@app.route("/download/", methods=["GET", "POST"])
+def download_links():
+    if request.method == "POST":
+        selected_links = request.form.getlist("links")
+        if len(selected_links) == 0:
+            return redirect(request.url)
+
+        for link in selected_links:
+            filepath = tempfile.mktemp("links-")
+            urllib_request.urlretrieve(link, filepath)
+            process_zip(filepath)
+            os.unlink(filepath)
+
+        server_name = app.config["SERVER_NAME"]
+        return redirect(f"{request.scheme}://{server_name}/")
+
+    context = json.load(open(os.path.join(app.config["USER_DATA"], "links.json")))
+    env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(os.getcwd()),
+    )
+    jinja2_template = env.get_template("download-links.jinja2")
+    return jinja2_template.render(context)
 
 
 if __name__ == "__main__":

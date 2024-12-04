@@ -9,7 +9,7 @@ server {
     }
 
     # Dynamically load/process all available data
-    location ~ ^/(upload|wsgi)/ {
+    location ~ ^/(download|upload|wsgi)/ {
         root            ${NGINX_ROOT};
         include         uwsgi_params;
         uwsgi_pass      unix:/var/local/jbrowse2.sock;

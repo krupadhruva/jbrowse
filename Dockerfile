@@ -41,3 +41,5 @@ COPY scripts/bootstrap_samples.sh /app/bootstrap_samples.sh
 RUN rm -fr ${NGINX_ROOT}/${APP_NAME}/test_data/*
 RUN /app/bootstrap_samples.sh /tmp/genome_data ${NGINX_ROOT}/${APP_NAME}/test_data
 RUN rm -fr /tmp/genome_data
+
+COPY data/links.json /user_data

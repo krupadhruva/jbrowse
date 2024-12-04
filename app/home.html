@@ -15,37 +15,32 @@
         }
     }
 
-    /* Split the screen in half */
-    .split {
-        height: 100%;
-        width: 50%;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        overflow-x: hidden;
+    .column {
+        float: left;
+        width: 33.33%;
+        text-align: center;
     }
 
-    /* Control the left side */
-    .left {
-        left: 0;
-    }
-
-    /* Control the right side */
-    .right {
-        right: 0;
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
     }
 </style>
 
 <html lang="">
 <body>
-<div class="split left">
-    <div class="centered">
+<div class="row">
+    <div class="column">
         <a target="_top" href="http://localhost:8080/">Go back home</a>
     </div>
-</div>
 
-<div class="split right">
-    <div class="centered">
+    <div class="column">
+        <a target="_top" href="http://localhost:8080/download/">Download samples file</a>
+    </div>
+
+    <div class="column">
         <a target="_top" href="http://localhost:8080/upload/">Upload samples file</a>
     </div>
 </div>

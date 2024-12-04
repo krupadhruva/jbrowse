@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Download samples</title>
+</head>
+
+<link rel="preconnect" href="https://rsms.me/">
+<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+
+<style>
+    /* CSS */
+    root {
+        font-family: Inter, sans-serif;
+        font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+    }
+
+    @supports (font-variation-settings: normal) {
+        :root {
+            font-family: InterVariable, sans-serif;
+        }
+    }
+</style>
+
+<iframe name="home" width="100%" height="30px" scrolling="no" src="http://localhost:8080/home.html"></iframe>
+
+<html lang="en">
+<body>
+
+<h2>Download links</h2>
+<form method=post>
+    <ol type="1">
+        {% for data in links %}
+            <li>
+                <label>
+                    <input type="checkbox" name="links" value={{ data.url }} />
+                </label><a href={{ data.url }}>{{ data.name }}</a>
+            </li>
+        {% endfor %}
+    </ol>
+    <input type=submit value=Download>
+</form>
+
+</body>
+</html>
