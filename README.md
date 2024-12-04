@@ -1,8 +1,5 @@
 # Basic instructions
 
-* Requires Orbstack (or Docker) to run jbrowse2
-* Type `make run`  and follow instructions
-
 ### Installation
 
 #### Basic requirements
