@@ -48,13 +48,13 @@
     <div class="centered">
         {% if test_data %}
             <h2>Test data</h2>
-            <ul>
+            <ol type="1">
                 {% for data in test_data %}
                     <li>
                         <a href={{ base_uri }}/?config={{ data.path }}/config.json>{{ data.name }}</a>
                     </li>
                 {% endfor %}
-            </ul>
+            </ol>
         {% endif %}
     </div>
 </div>
@@ -63,13 +63,13 @@
     <div class="centered">
         {% if user_data %}
             <h2>{{ storage }} user data</h2>
-            <ul>
+            <ol type="1">
                 {% for data in user_data %}
                     <li>
                         <a href={{ base_uri }}/?config={{ data.path }}/config.json>{{ data.name }}</a>
                     </li>
                 {% endfor %}
-            </ul>
+            </ol>
         {% endif %}
     </div>
 </div>
