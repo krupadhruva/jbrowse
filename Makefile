@@ -1,3 +1,8 @@
+# -*- Makefile -*-
+
+# type command is shell builtin and varies between shells
+SHELL=bash
+
 APP_NAME=jbrowse
 ifeq ($(DOCKER_HUB_USERNAME),)
 	DOCKER_HUB_USERNAME := $(shell whoami)

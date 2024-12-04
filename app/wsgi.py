@@ -10,7 +10,6 @@ from utils import process_zip, render_template
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.config["SERVER_NAME"] = "localhost:8080"
 app.config["SECRET_KEY"] = APP_NAME
 app.config["USER_DATA"] = os.path.join("/", USER_DATA)
 app.config["UPLOAD_FOLDER"] = os.path.join(app.config["USER_DATA"], "uploads")
@@ -38,7 +37,7 @@ upload_html = """
 </style>
 
 <iframe name="home" width="100%" height="30px" scrolling="no"
-        src="http://localhost:8080/home.html">
+        src="/home.html">
 </iframe>
 
 <title>Samples upload</title>
@@ -80,8 +79,7 @@ def upload_file():
             file.save(filepath)
             process_zip(filepath)
 
-            server_name = app.config["SERVER_NAME"]
-            return redirect(f"{request.scheme}://{server_name}/")
+            return redirect("/")
 
     return upload_html
 
@@ -99,8 +97,7 @@ def download_links():
             process_zip(filepath)
             os.unlink(filepath)
 
-        server_name = app.config["SERVER_NAME"]
-        return redirect(f"{request.scheme}://{server_name}/")
+        return redirect("/")
 
     try:
         with open(os.path.join(app.config["USER_DATA"], "links.json")) as fp:
