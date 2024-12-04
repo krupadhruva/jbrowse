@@ -67,7 +67,18 @@ def main() -> int:
 
 def docker(args, cmd):
     if cmd == "start":
-        cmd = ["docker", "run", "-d", "--rm", "-it", "-p", "8080:80", "--name=jbrowse"]
+        cmd = [
+            "docker",
+            "run",
+            "-d",
+            "--rm",
+            "-it",
+            "-p",
+            "8080:80",
+            "-p",
+            "80:80",
+            "--name=jbrowse",
+        ]
         if args.data_directory and os.path.isdir(args.data_directory):
             cmd.extend(
                 [
