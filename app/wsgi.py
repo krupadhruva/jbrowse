@@ -1,6 +1,5 @@
 import json
 import os
-import subprocess
 import tempfile
 from urllib import request as urllib_request
 
@@ -38,7 +37,9 @@ upload_html = """
     }
 </style>
 
-<iframe name="home" width="100%" height="30px" scrolling="no" src="http://localhost:8080/home.html"></iframe>
+<iframe name="home" width="100%" height="30px" scrolling="no"
+        src="http://localhost:8080/home.html">
+</iframe>
 
 <title>Samples upload</title>
 <h3>Upload zip file with samples</h3>
@@ -101,7 +102,12 @@ def download_links():
         server_name = app.config["SERVER_NAME"]
         return redirect(f"{request.scheme}://{server_name}/")
 
-    context = json.load(open(os.path.join(app.config["USER_DATA"], "links.json")))
+    try:
+        with open(os.path.join(app.config["USER_DATA"], "links.json")) as fp:
+            context = json.load(fp)
+    except FileNotFoundError:
+        context = {"links": []}
+
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(os.getcwd()),
     )
