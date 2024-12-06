@@ -30,6 +30,11 @@ def main() -> int:
         default=os.getenv("DOCKER_HUB_USERNAME", "krupadhruva"),
     )
     start_parser.add_argument(
+        "-m",
+        "--machine",
+        default=os.uname().machine,
+    )
+    start_parser.add_argument(
         "-d",
         "--data-directory",
         type=str,
@@ -55,7 +60,7 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.subparser_name == "start":
-        args.docker_image = f"docker.io/{args.docker_username}/jbrowse"
+        args.docker_image = f"docker.io/{args.docker_username}/jbrowse-{args.machine}"
         docker(args, "start")
     elif args.subparser_name == "stop":
         docker(args, "stop")

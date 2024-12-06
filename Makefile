@@ -4,10 +4,13 @@
 SHELL=bash
 
 APP_NAME=jbrowse
+ifeq ($(MACHINE),)
+	MACHINE := $(shell uname -m)
+endif
 ifeq ($(DOCKER_HUB_USERNAME),)
 	DOCKER_HUB_USERNAME := $(shell whoami)
 endif
-IMAGE_NAME=${DOCKER_HUB_USERNAME}/${APP_NAME}
+IMAGE_NAME=${DOCKER_HUB_USERNAME}/${APP_NAME}-${MACHINE}
 DOCKER_IMAGE=docker.io/${IMAGE_NAME}
 DOCKER_TAG=latest
 
