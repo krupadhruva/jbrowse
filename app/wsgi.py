@@ -1,5 +1,6 @@
 import json
 import os
+import pathlib
 import tempfile
 from urllib import request as urllib_request
 
@@ -57,7 +58,7 @@ def index():
 
 
 def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ["zip"]
+    return pathlib.Path(filename).suffix in ["gz", "zip"]
 
 
 @app.route("/upload/", methods=["GET", "POST"])

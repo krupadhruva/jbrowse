@@ -1,4 +1,6 @@
+import gzip
 import os
+import pathlib
 import re
 import subprocess
 import tempfile
@@ -45,8 +47,16 @@ def get_all_data() -> Dict[str, Any]:
 
 def process_zip(filepath: str):
     with tempfile.TemporaryDirectory() as tmpdir:
-        with zipfile.ZipFile(filepath) as zfh:
-            zfh.extractall(tmpdir)
+        if filepath.endswith(".gz"):
+            with gzip.open(filepath, "rb") as gfh:
+                base = pathlib.Path(filepath).stem
+                with open(os.path.join(tmpdir, base), "wb") as fh:
+                    fh.write(gfh.read())
+        elif filepath.endswith(".zip"):
+            with zipfile.ZipFile(filepath) as zfh:
+                zfh.extractall(tmpdir)
+        else:
+            return
 
         output = "/user_data/samples"
         os.makedirs(output, exist_ok=True)
