@@ -58,7 +58,7 @@ def index():
 
 
 def allowed_file(filename):
-    return pathlib.Path(filename).suffix in ["gz", "zip"]
+    return pathlib.Path(filename).suffix in [".gz", ".zip"]
 
 
 @app.route("/upload/", methods=["GET", "POST"])
