@@ -17,7 +17,7 @@ cd "${input_data}" || exit 1
 
 # https://jbrowse.org/jb2/docs/quickstart_web/#adding-a-genome-assembly-in-fasta-format
 # shellcheck disable=SC2044
-for fn in $(find . -type f -name "*.fasta" -o -name "*.fa" -o -name "*.faa" -o -name "*.fna"); do
+for fn in $(find . -type f -name "*.fasta" -o -name "*.fa*" -o -name "*.fna"); do
     # Remove file extension and cleanup dots
     target=$(echo "${fn%\.*}" | sed 's#[^\.][\.]#_#g' | tr -s '_')
 
@@ -27,7 +27,7 @@ done
 
 # https://jbrowse.org/jb2/docs/quickstart_web/#adding-a-gff3-file-with-gff3tabix
 # shellcheck disable=SC2044
-for fn in $(find . -type f -name "*.gff"); do
+for fn in $(find . -type f -name "*.gff*"); do
     # Remove file extension and cleanup dots
     target=$(echo "${fn%\.*}" | sed 's#[^\.][\.]#_#g' | tr -s '_')
 
